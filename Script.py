@@ -59,7 +59,7 @@ def analyze_dataset(df_train, df_test):
     sns.heatmap(corr, cmap="Greens",annot=False)
     
     
-def preprocess_data(df_train, df_test):
+def preprocess_data(df_train, df_test, verbose = True):
     """
     Method that will be used for all the data preprocessing steps.
 
@@ -90,10 +90,10 @@ def preprocess_data(df_train, df_test):
     df_test_noNAs=pd.DataFrame(imp_mean.fit_transform(df_test))
     df_test_noNAs.columns=df_test.columns
     df_test_noNAs.index=df_test.index
-    
-    for i in range(df_train_noNAs.shape[1]):
-        print("Column ", df_train_noNAs.columns[i], "NAs: ", df_train_noNAs.iloc[:, i].isnull().sum())
-    
+    if verbose:
+        for i in range(df_train_noNAs.shape[1]):
+            print("Column ", df_train_noNAs.columns[i], "NAs: ", df_train_noNAs.iloc[:, i].isnull().sum())
+        
 
 
     col_c = list(df_train.filter(like='c', axis=1).columns)

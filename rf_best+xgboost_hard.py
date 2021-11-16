@@ -11,11 +11,6 @@ y = df_train.pop("y")
 df_train.insert(54,"y", y)
 df_test = df_test.drop(["y", "i"], axis = 1)
 
-#Changing variable data types
-df_test.loc[:, "c1":"c12"] = df_test.loc[:, "c1":"c12"].astype("category")
-df_test.loc[:, ["o1", "o2"]] = df_test.loc[:, ["o1", "o2"]].astype("category")
-df_train.loc[:, "c1":"c12"] = df_train.loc[:, "c1":"c12"].astype("category")
-df_train.loc[:, ["o1", "o2", "y"]] = df_train.loc[:, ["o1", "o2", "y"]].astype("category")
 
 #Call relevant methods until we have results
 analyze_dataset(df_train, df_test)

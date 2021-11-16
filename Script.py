@@ -69,6 +69,7 @@ def preprocess_data(df_train, df_test, verbose = True):
         Contains all the examples that will be used when training the algorithm
     df_test : Pandas Dataframe
         Contains all the examples that will be used when testing the algorithm, does not include "y" column
+    verbose : By default True. It shows the no. of NAs in the converted data.    
 
     Returns
     -------

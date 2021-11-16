@@ -94,6 +94,17 @@ def preprocess_data(df_train, df_test):
     for i in range(df_train_noNAs.shape[1]):
         print("Column ", df_train_noNAs.columns[i], "NAs: ", df_train_noNAs.iloc[:, i].isnull().sum())
     
+
+
+    col_c = list(df_train.filter(like='c', axis=1).columns)
+    col_o = list(df_train.filter(like='o', axis=1).columns)
+    col_cat = col_c + col_o
+    cat_value = ['category']*len(col_cat)
+    dict_cat = dict(zip(col_cat, cat_value))
+
+    df_train_noNAs= df_train_noNAs.astype(dict_cat)
+    df_train_noNAs = df_train_noNAs.astype({'y':"category"})
+    df_test_noNAs= df_test_noNAs.astype(dict_cat)
     return df_train_noNAs, df_test_noNAs
 
 def compute_metrics(y_pred, y_real):

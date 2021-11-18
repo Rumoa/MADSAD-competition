@@ -17,6 +17,8 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split, StratifiedKFold, cross_validate
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import FunctionTransformer
 
 #ML libraries
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
@@ -24,6 +26,8 @@ from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score
+
+
 
 
 def analyze_dataset(df_train, df_test):
@@ -173,6 +177,58 @@ def save_predictions(preds, name = "preds"):
     prediction.columns = ["i", "y"]
     prediction.to_csv(name + ".csv", index=False)
     #return prediction
+    
+    
+    
+# I HAVE TO COMMENT THIS PROPERLY FOR GOD'S SAKE
+def create_encoder(X):
+    """Selects the categorical columns and creates an one-hot encoder for the dataset.
+
+    Args:
+        X : Multilabel dataset. Must include categorical columns
+
+    Returns:
+        enc: encoder from SKlearn OneHotEncoder
+    """
+    X_2 = X.select_dtypes(include=['category'])
+    enc = OneHotEncoder(handle_unknown='ignore')
+    enc.fit(X_2)
+    return enc
+
+
+def encode_using_training(X, encoder):
+    """Transform data given a previously-fitted encoder. If new categories
+    appears they are ignored.
+
+    Args:
+        X dataset, similar to the one used to create encoder.
+        encoder: previously fitted encoder.
+
+    Returns:
+        new_data: X transformed using encoder.
+    """
+    cat_col = X.select_dtypes(include=['category']).columns
+    aux_transformed = encoder.transform(X[cat_col]).toarray()
+    X = X.drop(cat_col, axis=1)
+    newcols = pd.DataFrame(aux_transformed)
+    newcols.columns = encoder.get_feature_names_out()
+#     newcols = newcols.astype('category')
+#     for i in newcols.columns:
+#        newcols[i] = newcols[i].cat.rename_categories(['no', 'yes']) 
+    
+    
+    X_onehot = pd.concat([X, newcols ], axis=1)
+    
+    return X_onehot
+
+def to_one_hot(currentData, trainingData):
+    """Transform currentData to one-hot encoding using trainingData to create the encoder
+    """    
+    _x_encoder = create_encoder(trainingData)
+    new_data = encode_using_training(currentData, _x_encoder)
+    return new_data
+
+
 if __name__ == '__main__':
 
     #Read and reshape the data initially

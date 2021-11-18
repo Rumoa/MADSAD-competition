@@ -57,6 +57,19 @@ def analyze_dataset(df_train, df_test):
     corr = df_train.corr()
     plt.figure(figsize=(12,8))
     sns.heatmap(corr, cmap="Greens",annot=False)
+
+    
+def change_types(df_train, df_test):
+    col_c = list(df_train.filter(like='c', axis=1).columns)
+    col_o = list(df_train.filter(like='o', axis=1).columns)
+    col_cat = col_c + col_o
+    cat_value = ['category']*len(col_cat)
+    dict_cat = dict(zip(col_cat, cat_value))
+
+    df_train_correct_type= df_train.astype(dict_cat)
+    df_train_correct_type = df_train_correct_type.astype({'y':"category"})
+    df_test_correct_type= df_test.astype(dict_cat)
+    return df_train_correct_type, df_test_correct_type
     
     
 def preprocess_data(df_train, df_test, verbose = True):
@@ -107,6 +120,9 @@ def preprocess_data(df_train, df_test, verbose = True):
     df_train_noNAs = df_train_noNAs.astype({'y':"category"})
     df_test_noNAs= df_test_noNAs.astype(dict_cat)
     return df_train_noNAs, df_test_noNAs
+
+
+
 
 def compute_metrics(y_pred, y_real):
     """
